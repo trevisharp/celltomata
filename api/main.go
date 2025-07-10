@@ -17,10 +17,9 @@ func main() {
 		}
 	})
 
+	log.Println("listening on localhost:3000/")
 	err := http.ListenAndServe(":3000", router)
-	if err == nil {
-		log.Println("listening on localhost:3000/")
-	} else {
+	if err != nil {
 		log.Println(err)
 	}
 }
