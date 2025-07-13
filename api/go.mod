@@ -1,4 +1,4 @@
-module celltomata.com
+module github.com/trevisharp/celltomata
 
 go 1.24.4
 
