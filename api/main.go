@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/trevisharp/celltomata/application/usecases"
+	"github.com/trevisharp/celltomata/api/application/usecases"
 )
 
 func main() {

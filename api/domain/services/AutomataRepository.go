@@ -1,6 +1,6 @@
 package services
 
-import "github.com/trevisharp/celltomata/domain/models"
+import "github.com/trevisharp/celltomata/api/domain/models"
 
 type AutomataRepository interface {
 	Get(id int) *models.Automata
