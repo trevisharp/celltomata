@@ -35,18 +35,25 @@ func AddCreateUserUseCase(
 		err = user.Validate()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
 
-		user.Password = cryptoService.EncryptPassword(user.Password)
+		user.Password, err = cryptoService.EncryptPassword(user.Password)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 
 		var findedUser, _ = userRepo.Find(user.Username)
 		if findedUser != nil {
 			http.Error(w, "username already is in use.", http.StatusBadRequest)
+			return
 		}
 
 		err = userRepo.Create(&user)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
 
 		valAccount.SendEmail(user.Username, user.Email)

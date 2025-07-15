@@ -12,10 +12,11 @@ import (
 
 func main() {
 	router := chi.NewRouter()
-	var mailService services.EmailService = infrastructure.GomailEmailService{}
+	var mailService = infrastructure.GomailEmailService{}
 	var validAccountService = services.ValidateAccountService{
 		EmailService: mailService,
 	}
+	var cryptoService = infrastructure.BCryptService{}
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("Celltomata is running..."))
@@ -24,7 +25,7 @@ func main() {
 		}
 	})
 
-	usecases.AddCreateUserUseCase(router, nil, nil, validAccountService)
+	usecases.AddCreateUserUseCase(router, cryptoService, nil, validAccountService)
 
 	log.Println("listening on localhost:3000/")
 	err := http.ListenAndServe(":3000", router)
