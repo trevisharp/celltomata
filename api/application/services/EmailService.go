@@ -1,5 +1,5 @@
 package services
 
 type EmailService interface {
-	Send(origin, password, destination, message string) error
+	Send(origin, password, destination, title, message string) error
 }

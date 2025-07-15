@@ -11,7 +11,12 @@ import (
 	domServices "github.com/trevisharp/celltomata/api/domain/services"
 )
 
-func AddCreateUserUseCase(router *chi.Mux, cryptoService appServices.CryptoService, userRepo domServices.UserRepository) {
+func AddCreateUserUseCase(
+	router *chi.Mux,
+	cryptoService appServices.CryptoService,
+	userRepo domServices.UserRepository,
+	valAccount appServices.ValidateAccountService) {
+
 	router.Post("/user", func(w http.ResponseWriter, r *http.Request) {
 		var body payloads.CreateUserRequest
 
@@ -43,6 +48,8 @@ func AddCreateUserUseCase(router *chi.Mux, cryptoService appServices.CryptoServi
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
+
+		valAccount.SendEmail(user.Username, user.Email)
 
 		w.WriteHeader(http.StatusOK)
 	})
