@@ -3,6 +3,7 @@ package usecases
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/trevisharp/celltomata/api/application/payloads"
@@ -11,7 +12,7 @@ import (
 	domServices "github.com/trevisharp/celltomata/api/domain/services"
 )
 
-func AddCreateUserUseCase(
+func CreateUserUseCase(
 	router *chi.Mux,
 	cryptoService appServices.CryptoService,
 	userRepo domServices.UserRepository,
@@ -56,7 +57,8 @@ func AddCreateUserUseCase(
 			return
 		}
 
-		valAccount.SendEmail(user.Username, user.Email)
+		emailPassword := os.Getenv("EMAIL_PASSWORD")
+		valAccount.SendEmail(user.Username, user.Email, emailPassword)
 
 		w.WriteHeader(http.StatusOK)
 	})

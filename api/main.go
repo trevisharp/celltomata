@@ -17,15 +17,9 @@ func main() {
 		EmailService: mailService,
 	}
 	var cryptoService = infrastructure.BCryptService{}
+	var userRepo = infrastructure.SupabaseUserRepository{}
 
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("Celltomata is running..."))
-		if err != nil {
-			log.Println(err)
-		}
-	})
-
-	usecases.AddCreateUserUseCase(router, cryptoService, nil, validAccountService)
+	usecases.CreateUserUseCase(router, cryptoService, userRepo, validAccountService)
 
 	log.Println("listening on localhost:3000/")
 	err := http.ListenAndServe(":3000", router)
