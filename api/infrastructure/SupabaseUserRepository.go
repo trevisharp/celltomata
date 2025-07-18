@@ -23,8 +23,7 @@ func (s SupabaseUserRepository) Find(login string) (*models.User, error) {
 }
 
 func (s SupabaseUserRepository) Create(user *models.User) error {
-	return nil
-
+	return SupabasePost("User", user)
 }
 
 func (s SupabaseUserRepository) Update(user *models.User) error {

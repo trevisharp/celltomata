@@ -1,7 +1,9 @@
 package infrastructure
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -33,7 +35,8 @@ func SupabaseGet[T any](entity string, query string) (*[]T, error) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("supabase error (%d): %s", resp.StatusCode, string(body))
 	}
 	defer resp.Body.Close()
 
@@ -45,4 +48,23 @@ func SupabaseGet[T any](entity string, query string) (*[]T, error) {
 	}
 
 	return &result, nil
+}
+
+func SupabasePost[T any](entity string, data T) error {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	req, err := makeSupabaseRequest(entity, "POST", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("supabase error (%d)", resp.StatusCode)
+	}
+
+	return nil
 }

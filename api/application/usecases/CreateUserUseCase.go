@@ -3,7 +3,6 @@ package usecases
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/trevisharp/celltomata/api/application/payloads"
@@ -57,8 +56,7 @@ func CreateUserUseCase(
 			return
 		}
 
-		emailPassword := os.Getenv("EMAIL_PASSWORD")
-		valAccount.SendEmail(user.Username, user.Email, emailPassword)
+		valAccount.SendEmail(user.Username, user.Email)
 
 		w.WriteHeader(http.StatusOK)
 	})

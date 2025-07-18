@@ -9,8 +9,9 @@ func (s GomailEmailService) Send(origin, password, destination, title, message s
 	m.SetHeader("From", origin)
 	m.SetHeader("To", destination)
 	m.SetHeader("Subject", title)
-	m.SetBody("text/plain", message)
+	m.SetBody("text/html", message)
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, origin, password)
-	return d.DialAndSend()
+
+	return d.DialAndSend(m)
 }
