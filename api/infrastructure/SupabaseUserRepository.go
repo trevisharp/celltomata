@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/trevisharp/celltomata/api/domain/models"
+	"github.com/trevisharp/celltomata/api/domain/services"
 )
 
 type SupabaseUserRepository struct{}
@@ -22,7 +23,7 @@ func (s SupabaseUserRepository) Find(login string) (*models.User, error) {
 	return &(*users)[0], nil
 }
 
-func (s SupabaseUserRepository) Create(user *models.User) error {
+func (s SupabaseUserRepository) Create(user *services.UserData) error {
 	return SupabasePost("User", user)
 }
 

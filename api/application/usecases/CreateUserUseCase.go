@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/trevisharp/celltomata/api/application/payloads"
 	appServices "github.com/trevisharp/celltomata/api/application/services"
-	"github.com/trevisharp/celltomata/api/domain/models"
+	"github.com/trevisharp/celltomata/api/domain/services"
 	domServices "github.com/trevisharp/celltomata/api/domain/services"
 )
 
@@ -26,7 +26,7 @@ func CreateUserUseCase(
 			return
 		}
 
-		var user models.User
+		var user services.UserData
 		user.Username = body.Username
 		user.Password = body.Password
 		user.Email = body.Email
