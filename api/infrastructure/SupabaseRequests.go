@@ -68,3 +68,18 @@ func SupabasePost[T any](entity string, data T) error {
 
 	return nil
 }
+
+func SupabaseDelete(entity, query string) error {
+	req, err := makeSupabaseRequest(entity+"?"+query, "DELETE", nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("supabase error (%d): %s", resp.StatusCode, string(body))
+	}
+
+	return nil
+}
