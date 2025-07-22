@@ -2,17 +2,20 @@ package services
 
 import (
 	"os"
+
+	"github.com/trevisharp/celltomata/api/domain/services"
 )
 
 type ValidateAccountService struct {
-	EmailService EmailService
+	EmailService     EmailService
+	VerificationRepo services.VerificationCodeRepository
 }
 
-func (s ValidateAccountService) SendEmail(username, email string) error {
+func (s ValidateAccountService) SendEmail(username, email, code string) error {
 	origin := os.Getenv("EMAIL_ORIGIN")
 	password := os.Getenv("EMAIL_PASSWORD")
 	title := "Welcome to celltomata"
-	validationUrl := os.Getenv("VALIDATION")
+	validationUrl := os.Getenv("VALIDATION") + "/" + code
 	message := `
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

@@ -15,7 +15,8 @@ func CreateUserUseCase(
 	router *chi.Mux,
 	cryptoService appServices.CryptoService,
 	userRepo domServices.UserRepository,
-	valAccount appServices.ValidateAccountService) {
+	valAccount appServices.ValidateAccountService,
+	verRepo domServices.VerificationCodeRepository) {
 
 	router.Post("/user", func(w http.ResponseWriter, r *http.Request) {
 		var body payloads.CreateUserRequest
@@ -50,13 +51,14 @@ func CreateUserUseCase(
 			return
 		}
 
-		err = userRepo.Create(&user)
+		id, err := userRepo.Create(&user)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		valAccount.SendEmail(user.Username, user.Email)
+		code, err := verRepo.CreateNew(id)
+		valAccount.SendEmail(user.Username, user.Email, code)
 
 		w.WriteHeader(http.StatusOK)
 	})

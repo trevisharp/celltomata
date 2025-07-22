@@ -18,8 +18,9 @@ func main() {
 	}
 	var cryptoService = infrastructure.BCryptService{}
 	var userRepo = infrastructure.SupabaseUserRepository{}
+	var veriRepo = infrastructure.SupabaseVerificationCodeRepository{}
 
-	usecases.CreateUserUseCase(router, cryptoService, userRepo, validAccountService)
+	usecases.CreateUserUseCase(router, cryptoService, userRepo, validAccountService, veriRepo)
 
 	log.Println("listening on localhost:3000/")
 	err := http.ListenAndServe(":3000", router)

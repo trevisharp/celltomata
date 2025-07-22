@@ -50,23 +50,30 @@ func SupabaseGet[T any](entity string, query string) (*[]T, error) {
 	return &result, nil
 }
 
-func SupabasePost[T any](entity string, data T) error {
+func SupabasePost[T any, R any](entity string, data T) (*[]R, error) {
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req, err := makeSupabaseRequest(entity, "POST", bytes.NewBuffer(jsonData))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if resp.StatusCode >= 400 {
-		return fmt.Errorf("supabase error (%d)", resp.StatusCode)
+		return nil, fmt.Errorf("supabase error (%d)", resp.StatusCode)
 	}
 
-	return nil
+	var result []R
+	body, _ := io.ReadAll(resp.Body)
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
 
 func SupabaseDelete(entity, query string) error {

@@ -18,7 +18,7 @@ func (s SupabaseVerificationCodeRepository) CreateNew(userId int) (string, error
 		UserID: userId,
 		Code:   code,
 	}
-	err = SupabasePost("VerificationCode", data)
+	_, err = SupabasePost[models.VerificationCode, models.VerificationCode]("VerificationCode", data)
 	if err != nil {
 		return "", err
 	}

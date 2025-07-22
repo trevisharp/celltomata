@@ -37,8 +37,17 @@ func (s SupabaseUserRepository) Get(id int) (*models.User, error) {
 	return &(*users)[0], nil
 }
 
-func (s SupabaseUserRepository) Create(user *services.UserData) error {
-	return SupabasePost("User", user)
+func (s SupabaseUserRepository) Create(user *services.UserData) (int, error) {
+	objs, err := SupabasePost[services.UserData, models.User]("User", *user)
+	if err != nil {
+		return 0, err
+	}
+
+	if len(*objs) == 0 {
+		return 0, nil
+	}
+
+	return (*objs)[0].ID, nil
 }
 
 func (s SupabaseUserRepository) Update(user *models.User) error {
