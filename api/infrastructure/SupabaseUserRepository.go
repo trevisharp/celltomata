@@ -23,10 +23,25 @@ func (s SupabaseUserRepository) Find(login string) (*models.User, error) {
 	return &(*users)[0], nil
 }
 
+func (s SupabaseUserRepository) Get(id int) (*models.User, error) {
+	query := fmt.Sprintf("ID.eq=", id)
+	users, err := SupabaseGet[models.User]("User", query)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(*users) == 0 {
+		return nil, nil
+	}
+
+	return &(*users)[0], nil
+}
+
 func (s SupabaseUserRepository) Create(user *services.UserData) error {
 	return SupabasePost("User", user)
 }
 
 func (s SupabaseUserRepository) Update(user *models.User) error {
-	return nil
+	id := user.ID
+	return SupabasePatch("User", id, user)
 }

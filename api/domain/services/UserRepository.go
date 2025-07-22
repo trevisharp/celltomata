@@ -6,6 +6,7 @@ import (
 
 type UserRepository interface {
 	Find(login string) (*models.User, error)
+	Get(id int) (*models.User, error)
 	Create(user *UserData) error
 	Update(user *models.User) error
 }

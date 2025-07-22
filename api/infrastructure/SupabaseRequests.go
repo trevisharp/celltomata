@@ -83,3 +83,22 @@ func SupabaseDelete(entity, query string) error {
 
 	return nil
 }
+
+func SupabasePatch[T any](entity string, id int, data T) error {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	req, err := makeSupabaseRequest(fmt.Sprintf(entity+"?ID.eq=%d", id), "PATCH", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("supabase error (%d)", resp.StatusCode)
+	}
+
+	return nil
+}
