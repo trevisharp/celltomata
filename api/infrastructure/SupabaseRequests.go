@@ -15,6 +15,7 @@ func makeSupabaseRequest(route, method string, body io.Reader) (*http.Request, e
 
 	supabaseUrl := "https://" + projId + ".supabase.co/rest/v1/"
 	requestUrl := supabaseUrl + route
+	fmt.Println("LOG:", method, "for", requestUrl)
 
 	req, err := http.NewRequest(method, requestUrl, body)
 	if err != nil {
